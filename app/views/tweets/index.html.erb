@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<br>
+<div class='container'>
+<% if user_signed_in? %>
+<%= render 'form', tweet: @tweet %>
+<% end %>
+
+</div>
+<br>
+<h1> Friends Tweets</h1>
+
+<% @tweets.each do | tweet | %>
+  <div class="box">
+  	<article class="media">
+  		<div class="media-left">
+  			<figure class="image is-50x50">
+  			<%= image_tag(tweet.user.user_img, size: 64, alt: tweet.user.name) %>
+  			</figure>
+  		</div>
+  		<div class="media-content">
+  			<div class="content">
+  			<strong><%= tweet.user.name %></strong><br/>
+			  <small><%= render_with_hashtags(tweet.content) %></small>
+<br>
+        <% if user_signed_in? %>
+        <% pre_like = @tweet.likes.find { |like| like.user_id == current_user.id} %>
+        <% if pre_like %>
+        <%= button_to 'Unlike', root_path(@tweet, pre_like), method: :delete %>
+        <% else %>
+        <%= button_to 'Like', root_path(@tweet), method: :post %>
+        <% end %> <p><%= @tweet.likes.count %> <%= (@tweet.likes.count) == 1 ? 'Like' : 'Likes'%></p>
+
+        <%= button_to 'retweet', tweet_retweet_path(tweet), method: :post %> 
+
+        <% end %> 
+        <br>
+       	<td><%= link_to "#{time_ago_in_words(tweet.created_at)} ago", tweet_path(tweet) %></td>
+		</div>
+  		</div>
+  	</article>
+	<% end %>
+ </div>
+
+<%= link_to 'New Tweet', new_tweet_path %>

@@ -1,0 +1,39 @@
+
+<div class='container'>
+<%= search_form_for @q do |f| %>
+    <div class="field">
+      <div class="control">
+        <%= f.label :content_cont %>
+        <%= f.search_field :content_cont, class: "form-control", placeholder: "" %>
+        <br>
+    </div>
+    </div>
+
+	 <%= f.submit "Search", class: "btn btn-primary" %>
+        
+	<% end %>
+    </div>
+
+	<%= paginate @tweets %>
+
+<% @tweets.each do | tweet | %>
+  <div class="box">
+  		<div class="media-left">
+  			<figure class="image is-30x30">
+  			<%= image_tag(tweet.user.user_img, size: 30, alt: tweet.user.name) %>
+  			</figure>
+  		</div>
+  		<div class="media-content">
+  			<div class="content">
+  			<strong><%= tweet.user.name %></strong><br/>
+	        <td><%= render_with_hashtags(tweet.content) %></td>
+            <p><%= @tweet.likes.count %> <%= (@tweet.likes.count) == 1 ? 'Like' : 'Likes'%></p>
+         	<td><%= link_to "#{time_ago_in_words(tweet.created_at)} ago", tweet_path(tweet) %></td>
+  		</div>
+	    </div>
+	<% end %>
+ </div>
+
+<h3><%= link_to_next_page @tweets ,'More Tweets' %></h3>
+
+
